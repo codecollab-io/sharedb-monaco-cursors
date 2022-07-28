@@ -22,9 +22,7 @@ var ShareDBMonacoCursors = /** @class */ (function () {
         this.listeners = [];
         this.cursors = new Map();
         this.colors = ['BurlyWood', 'lightseagreen', 'Violet', 'Red', 'forestgreen', 'DarkViolet', 'OrangeRed', 'navy', 'darkviolet', 'maroon'];
-        var monaco = opts.monaco, connection = opts.connection, namespace = opts.namespace, id = opts.id, viewOnly = opts.viewOnly, name = opts.name, colors = opts.colors, editors = opts.editors;
-        this.monaco = monaco;
-        this.connection = connection;
+        var connection = opts.connection, namespace = opts.namespace, id = opts.id, viewOnly = opts.viewOnly, name = opts.name, colors = opts.colors, editors = opts.editors;
         this.viewOnly = viewOnly;
         this.prescence = connection.getDocPresence(namespace, id);
         this.prescence.subscribe();

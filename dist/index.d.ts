@@ -9,11 +9,9 @@
 import type Monaco from 'monaco-editor';
 import type { ShareDBMonacoCursorsOptions } from './types';
 declare class ShareDBMonacoCursors implements Monaco.IDisposable {
-    private monaco;
     private prescenceId;
     private editors;
     private listeners;
-    private connection;
     private prescence;
     private localPrescence;
     private viewOnly;
