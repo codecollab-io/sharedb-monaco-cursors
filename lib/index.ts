@@ -8,7 +8,7 @@
  */
 
 import type Monaco from 'monaco-editor';
-import type { Connection, Presence, LocalPresence } from 'sharedb/lib/client';
+import type { Presence, LocalPresence } from 'sharedb/lib/client';
 import CursorManager from './cursor/manager';
 import SelectionManager from './selection/manager';
 import type { Cursor, ShareDBMonacoCursorsOptions } from './types';
@@ -61,8 +61,6 @@ const styles = `
 
 class ShareDBMonacoCursors implements Monaco.IDisposable {
 
-    private monaco: typeof Monaco;
-
     private prescenceId = Date.now() + Math.floor(Math.random() * 1000000000).toString();
 
     private editors: Map<string, [
@@ -70,8 +68,6 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
     ]> = new Map();
 
     private listeners: Array<Monaco.IDisposable> = [];
-
-    private connection: Connection;
 
     private prescence: Presence;
 
@@ -87,10 +83,8 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
 
     constructor(opts: ShareDBMonacoCursorsOptions) {
 
-        const { monaco, connection, namespace, id, viewOnly, name, colors, editors } = opts;
+        const { connection, namespace, id, viewOnly, name, colors, editors } = opts;
 
-        this.monaco = monaco;
-        this.connection = connection;
         this.viewOnly = viewOnly;
         this.prescence = connection.getDocPresence(namespace, id);
         this.prescence.subscribe();
