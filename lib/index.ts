@@ -202,6 +202,56 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
 
     }
 
+    /**
+     * Toggles the View-Only state of the cursors.
+     * When set to true, this user's cursors will not be broadcasted.
+     * @param {boolean} viewOnly - Set to true to set to View-Only mode
+     */
+    setViewOnly(viewOnly: boolean) {
+
+        this.viewOnly = viewOnly;
+
+    }
+
+    /**
+     * Add an editor
+     * @param {Monaco.editor.ICodeEditor} editor - The ICodeEditor instance
+     */
+    addEditor(editor: Monaco.editor.ICodeEditor) {
+
+        const id = editor.getId();
+
+        if (this.editors.has(id)) return;
+
+        this.editors.set(id, [
+            editor,
+            new CursorManager({ editor, tooltips: true, tooltipDuration: 1 }),
+            new SelectionManager({ editor }),
+        ]);
+
+    }
+
+    /**
+     * Disposes all cursors, selection from the editor
+     * @param {string} id - The editor's ID from its .getId() method
+     */
+    removeEditor(id: string) {
+
+        if (!this.editors.has(id)) return;
+
+        const [, cursorManager, selectionManager] = this.editors.get(id)!;
+
+        cursorManager.dispose();
+        selectionManager.dispose();
+
+        this.editors.delete(id);
+
+    }
+
+    /**
+     * Close all cursors and clean up
+     * Disposes all cursor and selection listeners and destroys the prescence.
+     */
     dispose() {
 
         const { editors } = this;

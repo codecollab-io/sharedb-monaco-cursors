@@ -107,6 +107,44 @@ var ShareDBMonacoCursors = /** @class */ (function () {
             }
         });
     };
+    /**
+     * Toggles the View-Only state of the cursors.
+     * When set to true, this user's cursors will not be broadcasted.
+     * @param {boolean} viewOnly - Set to true to set to View-Only mode
+     */
+    ShareDBMonacoCursors.prototype.setViewOnly = function (viewOnly) {
+        this.viewOnly = viewOnly;
+    };
+    /**
+     * Add an editor
+     * @param {Monaco.editor.ICodeEditor} editor - The ICodeEditor instance
+     */
+    ShareDBMonacoCursors.prototype.addEditor = function (editor) {
+        var id = editor.getId();
+        if (this.editors.has(id))
+            return;
+        this.editors.set(id, [
+            editor,
+            new manager_1.default({ editor: editor, tooltips: true, tooltipDuration: 1 }),
+            new manager_2.default({ editor: editor }),
+        ]);
+    };
+    /**
+     * Disposes all cursors, selection from the editor
+     * @param {string} id - The editor's ID from its .getId() method
+     */
+    ShareDBMonacoCursors.prototype.removeEditor = function (id) {
+        if (!this.editors.has(id))
+            return;
+        var _a = this.editors.get(id), cursorManager = _a[1], selectionManager = _a[2];
+        cursorManager.dispose();
+        selectionManager.dispose();
+        this.editors.delete(id);
+    };
+    /**
+     * Close all cursors and clean up
+     * Disposes all cursor and selection listeners and destroys the prescence.
+     */
     ShareDBMonacoCursors.prototype.dispose = function () {
         var _this = this;
         var editors = this.editors;
