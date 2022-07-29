@@ -12,7 +12,6 @@ export type Cursor = {
 }
 
 export type ShareDBMonacoCursorsOptions = {
-    monaco: typeof Monaco;
     connection: Connection;
     namespace: string;
     id: string;
