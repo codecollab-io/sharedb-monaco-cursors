@@ -149,8 +149,6 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
 
         this.prescence.on('receive', (id, update) => {
 
-            const { name } = update;
-
             console.log(update);
 
             // Cursor left
@@ -168,6 +166,8 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
                 return;
 
             }
+
+            const { name } = update;
 
             // New cursor
             if (!this.cursors.has(id)) {

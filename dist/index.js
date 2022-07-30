@@ -72,7 +72,6 @@ var ShareDBMonacoCursors = /** @class */ (function () {
             return listeners.push(editor.onDidChangeCursorSelection(onSel));
         });
         this.prescence.on('receive', function (id, update) {
-            var name = update.name;
             console.log(update);
             // Cursor left
             if (!update) {
@@ -84,6 +83,7 @@ var ShareDBMonacoCursors = /** @class */ (function () {
                 _this.cursors.delete(id);
                 return;
             }
+            var name = update.name;
             // New cursor
             if (!_this.cursors.has(id)) {
                 editors.forEach(function (_a) {
