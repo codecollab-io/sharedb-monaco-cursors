@@ -107,7 +107,7 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
             style = document.createElement('style');
             style.setAttribute('id', 'sharedb-monaco-cursors-styles');
             style.innerHTML = styles;
-            document.getElementsByClassName('head')[0].appendChild(style);
+            document.getElementsByTagName('head')[0].appendChild(style);
 
         }
 

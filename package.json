@@ -1,6 +1,6 @@
 {
   "name": "sharedb-monaco-cursors",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Real-time cursor support for sharedb-monaco",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
