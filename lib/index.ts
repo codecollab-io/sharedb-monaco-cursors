@@ -147,6 +147,7 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
         editors.forEach(([editor]) => listeners.push(editor.onDidChangeCursorPosition(onPos)));
         editors.forEach(([editor]) => listeners.push(editor.onDidChangeCursorSelection(onSel)));
 
+        this.prescence.removeAllListeners('receive');
         this.prescence.on('receive', (id, update) => {
 
             // Cursor left
@@ -246,6 +247,8 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
 
         this.editors.set(id, [editor, cursorManager, selectionManager]);
 
+        this.attachEventListeners();
+
     }
 
     /**
@@ -264,6 +267,8 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
         this.editors.delete(id);
 
         if (this.editors.size === 0) this.prescence.unsubscribe();
+
+        this.attachEventListeners();
 
     }
 

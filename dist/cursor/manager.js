@@ -38,10 +38,15 @@ var CursorManager = /** @class */ (function () {
     CursorManager.prototype.removeCursor = function (id) {
         if (typeof id !== 'string')
             throw new Error("'id' must be a string");
-        var cursorWidget = this._getCursor(id);
-        if (!cursorWidget.isDisposed())
-            cursorWidget.dispose();
-        this._cursorWidgets.delete(id);
+        try {
+            var cursorWidget = this._getCursor(id);
+            if (!cursorWidget.isDisposed())
+                cursorWidget.dispose();
+            this._cursorWidgets.delete(id);
+        }
+        catch (_a) {
+            console.warn('Cursor already removed.');
+        }
     };
     CursorManager.prototype.setCursorPosition = function (id, position) {
         if (typeof id !== 'string')

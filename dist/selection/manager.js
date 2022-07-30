@@ -32,9 +32,14 @@ var SelectionManager = /** @class */ (function () {
         return selection;
     };
     SelectionManager.prototype.removeSelection = function (id) {
-        var selection = this._getSelection(id);
-        if (!selection.isDisposed())
-            selection.dispose();
+        try {
+            var selection = this._getSelection(id);
+            if (!selection.isDisposed())
+                selection.dispose();
+        }
+        catch (_a) {
+            console.warn('Selection is already removed.');
+        }
     };
     SelectionManager.prototype.setSelectionOffsets = function (id, start, end) {
         var selection = this._getSelection(id);

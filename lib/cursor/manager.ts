@@ -52,9 +52,17 @@ class CursorManager implements Monaco.IDisposable {
 
         if (typeof id !== 'string') throw new Error("'id' must be a string");
 
-        const cursorWidget = this._getCursor(id);
-        if (!cursorWidget.isDisposed()) cursorWidget.dispose();
-        this._cursorWidgets.delete(id);
+        try {
+
+            const cursorWidget = this._getCursor(id);
+            if (!cursorWidget.isDisposed()) cursorWidget.dispose();
+            this._cursorWidgets.delete(id);
+
+        } catch {
+
+            console.warn('Cursor already removed.');
+
+        }
 
     }
 

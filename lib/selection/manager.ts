@@ -47,8 +47,16 @@ class SelectionManager {
 
     removeSelection(id: string) {
 
-        const selection = this._getSelection(id);
-        if (!selection.isDisposed()) selection.dispose();
+        try {
+
+            const selection = this._getSelection(id);
+            if (!selection.isDisposed()) selection.dispose();
+
+        } catch {
+
+            console.warn('Selection is already removed.');
+
+        }
 
     }
 
