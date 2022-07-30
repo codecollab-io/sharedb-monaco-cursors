@@ -24,7 +24,7 @@ var ShareDBMonacoCursors = /** @class */ (function () {
         this.colors = ['BurlyWood', 'lightseagreen', 'Violet', 'Red', 'forestgreen', 'DarkViolet', 'OrangeRed', 'navy', 'darkviolet', 'maroon'];
         var connection = opts.connection, namespace = opts.namespace, id = opts.id, viewOnly = opts.viewOnly, name = opts.name, colors = opts.colors, editors = opts.editors;
         this.viewOnly = viewOnly;
-        this.prescence = connection.getDocPresence(namespace, id);
+        this.prescence = connection.getPresence("".concat(namespace, "-").concat(id));
         this.prescence.subscribe();
         this.name = name;
         this.prescenceId += "-".concat(name);

@@ -86,7 +86,7 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
         const { connection, namespace, id, viewOnly, name, colors, editors } = opts;
 
         this.viewOnly = viewOnly;
-        this.prescence = connection.getDocPresence(namespace, id);
+        this.prescence = connection.getPresence(`${namespace}-${id}`);
         this.prescence.subscribe();
         this.name = name;
         this.prescenceId += `-${name}`;
