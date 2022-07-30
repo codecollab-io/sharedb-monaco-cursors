@@ -113,6 +113,9 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
 
         this.attachEventListeners();
 
+        this.onDidChangeCursorPosition = this.onDidChangeCursorPosition.bind(this);
+        this.onDidChangeCursorSelection = this.onDidChangeCursorSelection.bind(this);
+
     }
 
     private onDidChangeCursorPosition(event: Monaco.editor.ICursorPositionChangedEvent) {

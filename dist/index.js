@@ -44,6 +44,8 @@ var ShareDBMonacoCursors = /** @class */ (function () {
             document.getElementsByTagName('head')[0].appendChild(style);
         }
         this.attachEventListeners();
+        this.onDidChangeCursorPosition = this.onDidChangeCursorPosition.bind(this);
+        this.onDidChangeCursorSelection = this.onDidChangeCursorSelection.bind(this);
     }
     ShareDBMonacoCursors.prototype.onDidChangeCursorPosition = function (event) {
         if (!this.viewOnly)
