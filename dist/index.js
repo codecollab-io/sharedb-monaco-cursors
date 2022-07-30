@@ -88,8 +88,7 @@ var ShareDBMonacoCursors = /** @class */ (function () {
             if (!_this.cursors.has(id)) {
                 editors.forEach(function (_a) {
                     var cursorManager = _a[1], selectionManager = _a[2];
-                    var color = colors[Math.ceil(Math.random() * colors.length)];
-                    console.log(id, color, name);
+                    var color = colors[Math.floor(Math.random() * colors.length)];
                     cursorManager.addCursor(id, color, name);
                     selectionManager.addSelection(id, color, name);
                 });

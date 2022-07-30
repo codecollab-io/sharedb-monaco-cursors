@@ -52,7 +52,7 @@ class CursorWidget implements Monaco.editor.IContentWidget, Monaco.IDisposable {
         if (tooltipEnabled) {
 
             this._tooltipNode = document.createElement('div');
-            this._tooltipNode.className = 'sharedb-monaco-cursors-toolTip';
+            this._tooltipNode.className = 'sharedb-monaco-cursors-tooltip';
             this._tooltipNode.style.background = color;
             this._tooltipNode.innerHTML = label;
             this._domNode.appendChild(this._tooltipNode);

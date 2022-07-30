@@ -33,7 +33,7 @@ var CursorWidget = /** @class */ (function () {
         this._domNode.style.height = "".concat(lineHeight, "px");
         if (tooltipEnabled) {
             this._tooltipNode = document.createElement('div');
-            this._tooltipNode.className = 'sharedb-monaco-cursors-toolTip';
+            this._tooltipNode.className = 'sharedb-monaco-cursors-tooltip';
             this._tooltipNode.style.background = color;
             this._tooltipNode.innerHTML = label;
             this._domNode.appendChild(this._tooltipNode);
