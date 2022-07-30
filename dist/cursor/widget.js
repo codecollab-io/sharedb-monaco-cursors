@@ -16,11 +16,7 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var monaco_editor_1 = __importDefault(require("monaco-editor"));
 var CursorWidget = /** @class */ (function () {
     function CursorWidget(opts) {
         var _this = this;
@@ -30,7 +26,7 @@ var CursorWidget = /** @class */ (function () {
         this._tooltipDuration = tooltipDuration;
         this._id = "cursor-".concat(widgetId);
         this._onDisposed = onDisposed;
-        var lineHeight = editor.getOption(monaco_editor_1.default.editor.EditorOption.lineHeight);
+        var lineHeight = editor.getRawOptions().lineHeight || 23;
         this._domNode = document.createElement('div');
         this._domNode.className = 'sharedb-monaco-cursors-cursor';
         this._domNode.style.background = color;
