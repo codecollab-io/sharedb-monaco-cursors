@@ -175,6 +175,7 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
                 editors.forEach(([, cursorManager, selectionManager]) => {
 
                     const color = colors[Math.ceil(Math.random() * colors.length)];
+                    console.log(id, color, name);
                     cursorManager.addCursor(id, color, name);
                     selectionManager.addSelection(id, color, name);
 
