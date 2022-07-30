@@ -127,13 +127,18 @@ var ShareDBMonacoCursors = /** @class */ (function () {
      */
     ShareDBMonacoCursors.prototype.addEditor = function (editor) {
         var id = editor.getId();
+        if (this.editors.size === 0)
+            this.prescence.subscribe();
         if (this.editors.has(id))
             return;
-        this.editors.set(id, [
-            editor,
-            new manager_1.default({ editor: editor, tooltips: true, tooltipDuration: 1 }),
-            new manager_2.default({ editor: editor }),
-        ]);
+        var cursorManager = new manager_1.default({ editor: editor, tooltips: true, tooltipDuration: 1 });
+        var selectionManager = new manager_2.default({ editor: editor });
+        this.cursors.forEach(function (cursor, cursorID) {
+            var color = cursor.color, name = cursor.name;
+            cursorManager.addCursor(cursorID, color, name);
+            selectionManager.addSelection(cursorID, color, name);
+        });
+        this.editors.set(id, [editor, cursorManager, selectionManager]);
     };
     /**
      * Disposes all cursors, selection from the editor
@@ -146,6 +151,8 @@ var ShareDBMonacoCursors = /** @class */ (function () {
         cursorManager.dispose();
         selectionManager.dispose();
         this.editors.delete(id);
+        if (this.editors.size === 0)
+            this.prescence.unsubscribe();
     };
     /**
      * Close all cursors and clean up

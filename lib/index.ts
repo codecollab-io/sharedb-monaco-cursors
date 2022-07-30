@@ -230,13 +230,21 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
 
         const id = editor.getId();
 
+        if (this.editors.size === 0) this.prescence.subscribe();
         if (this.editors.has(id)) return;
 
-        this.editors.set(id, [
-            editor,
-            new CursorManager({ editor, tooltips: true, tooltipDuration: 1 }),
-            new SelectionManager({ editor }),
-        ]);
+        const cursorManager = new CursorManager({ editor, tooltips: true, tooltipDuration: 1 });
+        const selectionManager = new SelectionManager({ editor });
+
+        this.cursors.forEach((cursor, cursorID) => {
+
+            const { color, name } = cursor;
+            cursorManager.addCursor(cursorID, color, name);
+            selectionManager.addSelection(cursorID, color, name);
+
+        });
+
+        this.editors.set(id, [editor, cursorManager, selectionManager]);
 
     }
 
@@ -254,6 +262,8 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
         selectionManager.dispose();
 
         this.editors.delete(id);
+
+        if (this.editors.size === 0) this.prescence.unsubscribe();
 
     }
 
