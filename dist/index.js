@@ -73,6 +73,7 @@ var ShareDBMonacoCursors = /** @class */ (function () {
         });
         this.prescence.on('receive', function (id, update) {
             var name = update.name;
+            console.log(update);
             // Cursor left
             if (!update) {
                 editors.forEach(function (_a) {

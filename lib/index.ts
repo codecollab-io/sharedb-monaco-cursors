@@ -151,6 +151,8 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
 
             const { name } = update;
 
+            console.log(update);
+
             // Cursor left
             if (!update) {
 
