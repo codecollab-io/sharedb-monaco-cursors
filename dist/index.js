@@ -104,7 +104,7 @@ var ShareDBMonacoCursors = /** @class */ (function () {
             }
             // Cursor Pos Change occurred
             if ('p' in update) {
-                var pos_1 = update.s;
+                var pos_1 = update.p;
                 editors.forEach(function (_a) {
                     var cursorManager = _a[1];
                     return cursorManager.setCursorPosition(id, pos_1);

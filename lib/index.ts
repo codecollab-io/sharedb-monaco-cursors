@@ -200,7 +200,7 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
             // Cursor Pos Change occurred
             if ('p' in update) {
 
-                const pos: Monaco.Position = update.s;
+                const pos: Monaco.Position = update.p;
                 editors.forEach(([, cursorManager]) => cursorManager.setCursorPosition(id, pos));
 
             }
