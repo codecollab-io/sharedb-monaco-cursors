@@ -57,7 +57,10 @@ var ShareDBMonacoCursors = /** @class */ (function () {
     };
     ShareDBMonacoCursors.prototype.attachEventListeners = function () {
         var _this = this;
-        var _a = this, editors = _a.editors, onPos = _a.onDidChangeCursorPosition, onSel = _a.onDidChangeCursorSelection, listeners = _a.listeners, colors = _a.colors;
+        var _a = this, editors = _a.editors, listeners = _a.listeners, colors = _a.colors;
+        var _b = this, onPos = _b.onDidChangeCursorPosition, onSel = _b.onDidChangeCursorSelection;
+        onPos = onPos.bind(this);
+        onSel = onSel.bind(this);
         listeners.forEach(function (listener) { return listener.dispose(); });
         this.listeners = [];
         editors.forEach(function (_a) {

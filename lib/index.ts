@@ -133,9 +133,13 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
     private attachEventListeners() {
 
         const {
-            editors,
-            onDidChangeCursorPosition: onPos, onDidChangeCursorSelection: onSel, listeners, colors,
+            editors, listeners, colors,
         } = this;
+
+        let { onDidChangeCursorPosition: onPos, onDidChangeCursorSelection: onSel } = this;
+
+        onPos = onPos.bind(this);
+        onSel = onSel.bind(this);
 
         listeners.forEach((listener) => listener.dispose());
         this.listeners = [];
