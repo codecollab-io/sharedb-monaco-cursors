@@ -5,7 +5,7 @@
  * @license MIT
  */
 
-import type Monaco from 'monaco-editor';
+import Monaco from 'monaco-editor';
 import type { CursorWidgetOptions } from '../types';
 
 class CursorWidget implements Monaco.editor.IContentWidget, Monaco.IDisposable {
@@ -43,7 +43,7 @@ class CursorWidget implements Monaco.editor.IContentWidget, Monaco.IDisposable {
         this._id = `cursor-${widgetId}`;
         this._onDisposed = onDisposed;
 
-        const lineHeight = editor.getOption(56);
+        const lineHeight = editor.getOption(Monaco.editor.EditorOption.lineHeight);
         this._domNode = document.createElement('div');
         this._domNode.className = 'sharedb-monaco-cursors-cursor';
         this._domNode.style.background = color;

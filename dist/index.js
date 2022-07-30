@@ -72,7 +72,6 @@ var ShareDBMonacoCursors = /** @class */ (function () {
             return listeners.push(editor.onDidChangeCursorSelection(onSel));
         });
         this.prescence.on('receive', function (id, update) {
-            console.log(update);
             // Cursor left
             if (!update) {
                 editors.forEach(function (_a) {
@@ -91,6 +90,7 @@ var ShareDBMonacoCursors = /** @class */ (function () {
                     var color = colors[Math.floor(Math.random() * colors.length)];
                     cursorManager.addCursor(id, color, name);
                     selectionManager.addSelection(id, color, name);
+                    _this.cursors.set(id, { color: color, name: name });
                 });
             }
             // Selection occurred

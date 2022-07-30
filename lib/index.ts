@@ -149,8 +149,6 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
 
         this.prescence.on('receive', (id, update) => {
 
-            console.log(update);
-
             // Cursor left
             if (!update) {
 
@@ -177,6 +175,8 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
                     const color = colors[Math.floor(Math.random() * colors.length)];
                     cursorManager.addCursor(id, color, name);
                     selectionManager.addSelection(id, color, name);
+
+                    this.cursors.set(id, { color, name });
 
                 });
 

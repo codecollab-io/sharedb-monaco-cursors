@@ -4,7 +4,7 @@
  * @author Carl Voller <carlvoller8@gmail.com>
  * @license MIT
  */
-import type Monaco from 'monaco-editor';
+import Monaco from 'monaco-editor';
 import type { CursorWidgetOptions } from '../types';
 declare class CursorWidget implements Monaco.editor.IContentWidget, Monaco.IDisposable {
     private readonly _id;
