@@ -118,6 +118,7 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
 
         this.onDidChangeCursorPosition = this.onDidChangeCursorPosition.bind(this);
         this.onDidChangeCursorSelection = this.onDidChangeCursorSelection.bind(this);
+        this.onPresenceReceive = this.onPresenceReceive.bind(this);
 
     }
 
@@ -202,7 +203,9 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
 
         const { editors, listeners } = this;
 
-        let { onDidChangeCursorPosition: onPos, onDidChangeCursorSelection: onSel } = this;
+        let {
+            onDidChangeCursorPosition: onPos, onDidChangeCursorSelection: onSel,
+        } = this;
 
         onPos = onPos.bind(this);
         onSel = onSel.bind(this);

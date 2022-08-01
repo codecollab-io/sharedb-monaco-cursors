@@ -47,6 +47,7 @@ var ShareDBMonacoCursors = /** @class */ (function () {
         this.attachEventListeners();
         this.onDidChangeCursorPosition = this.onDidChangeCursorPosition.bind(this);
         this.onDidChangeCursorSelection = this.onDidChangeCursorSelection.bind(this);
+        this.onPresenceReceive = this.onPresenceReceive.bind(this);
     }
     ShareDBMonacoCursors.prototype.onDidChangeCursorPosition = function (event) {
         if (!this.viewOnly)
