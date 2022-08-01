@@ -103,9 +103,10 @@ var ShareDBMonacoCursors = /** @class */ (function () {
     };
     ShareDBMonacoCursors.prototype.attachEventListeners = function () {
         var _a = this, editors = _a.editors, listeners = _a.listeners;
-        var _b = this, onPos = _b.onDidChangeCursorPosition, onSel = _b.onDidChangeCursorSelection;
+        var _b = this, onPos = _b.onDidChangeCursorPosition, onSel = _b.onDidChangeCursorSelection, onPresenceReceive = _b.onPresenceReceive;
         onPos = onPos.bind(this);
         onSel = onSel.bind(this);
+        onPresenceReceive = onPresenceReceive.bind(this);
         listeners.forEach(function (listener) { return listener.dispose(); });
         this.listeners = [];
         editors.forEach(function (_a) {
@@ -116,8 +117,8 @@ var ShareDBMonacoCursors = /** @class */ (function () {
             var editor = _a[0];
             return listeners.push(editor.onDidChangeCursorSelection(onSel));
         });
-        this.prescence.removeListener('receive', this.onPresenceReceive);
-        this.prescence.on('receive', this.onPresenceReceive);
+        this.prescence.removeListener('receive', onPresenceReceive);
+        this.prescence.on('receive', onPresenceReceive);
     };
     /**
      * Toggles the View-Only state of the cursors.

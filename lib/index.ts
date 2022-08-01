@@ -204,11 +204,12 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
         const { editors, listeners } = this;
 
         let {
-            onDidChangeCursorPosition: onPos, onDidChangeCursorSelection: onSel,
+            onDidChangeCursorPosition: onPos, onDidChangeCursorSelection: onSel, onPresenceReceive,
         } = this;
 
         onPos = onPos.bind(this);
         onSel = onSel.bind(this);
+        onPresenceReceive = onPresenceReceive.bind(this);
 
         listeners.forEach((listener) => listener.dispose());
         this.listeners = [];
@@ -216,8 +217,8 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
         editors.forEach(([editor]) => listeners.push(editor.onDidChangeCursorPosition(onPos)));
         editors.forEach(([editor]) => listeners.push(editor.onDidChangeCursorSelection(onSel)));
 
-        this.prescence.removeListener('receive', this.onPresenceReceive);
-        this.prescence.on('receive', this.onPresenceReceive);
+        this.prescence.removeListener('receive', onPresenceReceive);
+        this.prescence.on('receive', onPresenceReceive);
 
     }
 
