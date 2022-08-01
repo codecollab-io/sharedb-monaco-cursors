@@ -11,7 +11,7 @@ import type Monaco from 'monaco-editor';
 import type { Presence, LocalPresence } from 'sharedb/lib/client';
 import CursorManager from './cursor/manager';
 import SelectionManager from './selection/manager';
-import type { Cursor, ShareDBMonacoCursorsOptions } from './types';
+import type { Cursor, IPresenceReceiveUpdate, ShareDBMonacoCursorsOptions } from './types';
 
 const styles = `
 .sharedb-monaco-cursors-cursor {
@@ -133,11 +133,74 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
 
     }
 
+    private onPresenceReceive(id: string, update: IPresenceReceiveUpdate) {
+
+        const { editors, colors } = this;
+
+        const [fileID, prescenceId, name] = id.split('-');
+        const curID = `${prescenceId}-${name}`;
+
+        // Cursor left
+        if (!update || fileID !== this.fileID) {
+
+            editors.forEach(([, cursorManager, selectionManager]) => {
+
+                cursorManager.removeCursor(curID);
+                selectionManager.removeSelection(curID);
+
+            });
+
+            this.cursors.delete(curID);
+
+            return;
+
+        }
+
+        // New cursor
+        if (!this.cursors.has(curID)) {
+
+            editors.forEach(([, cursorManager, selectionManager]) => {
+
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                cursorManager.addCursor(curID, color, name);
+                selectionManager.addSelection(curID, color, name);
+
+                this.cursors.set(curID, { color, name });
+
+            });
+
+        }
+
+        // Selection occurred
+        if ('s' in update) {
+
+            const {
+                startColumn, startLineNumber, endColumn, endLineNumber,
+            }: Monaco.Selection = update.s;
+
+            editors.forEach(([,, selectionManager]) => {
+
+                const start = { lineNumber: startLineNumber, column: startColumn };
+                const end = { lineNumber: endLineNumber, column: endColumn };
+                selectionManager.setSelectionPositions(curID, start, end);
+
+            });
+
+        }
+
+        // Cursor Pos Change occurred
+        if ('p' in update) {
+
+            const pos: Monaco.Position = update.p;
+            editors.forEach(([, cursorManager]) => cursorManager.setCursorPosition(curID, pos));
+
+        }
+
+    }
+
     private attachEventListeners() {
 
-        const {
-            editors, listeners, colors,
-        } = this;
+        const { editors, listeners } = this;
 
         let { onDidChangeCursorPosition: onPos, onDidChangeCursorSelection: onSel } = this;
 
@@ -150,70 +213,8 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
         editors.forEach(([editor]) => listeners.push(editor.onDidChangeCursorPosition(onPos)));
         editors.forEach(([editor]) => listeners.push(editor.onDidChangeCursorSelection(onSel)));
 
-        this.prescence.removeAllListeners('receive');
-        this.prescence.on('receive', (id, update) => {
-
-            const [fileID, prescenceId, name] = id.split('-');
-            const curID = `${prescenceId}-${name}`;
-
-            // Cursor left
-            console.log(fileID, this.fileID);
-            if ((!update || fileID !== this.fileID) && this.cursors.has(curID)) {
-
-                editors.forEach(([, cursorManager, selectionManager]) => {
-
-                    cursorManager.removeCursor(curID);
-                    selectionManager.removeSelection(curID);
-
-                });
-
-                this.cursors.delete(curID);
-
-                return;
-
-            }
-
-            // New cursor
-            if (!this.cursors.has(curID)) {
-
-                editors.forEach(([, cursorManager, selectionManager]) => {
-
-                    const color = colors[Math.floor(Math.random() * colors.length)];
-                    cursorManager.addCursor(curID, color, name);
-                    selectionManager.addSelection(curID, color, name);
-
-                    this.cursors.set(curID, { color, name });
-
-                });
-
-            }
-
-            // Selection occurred
-            if ('s' in update) {
-
-                const {
-                    startColumn, startLineNumber, endColumn, endLineNumber,
-                }: Monaco.Selection = update.s;
-
-                editors.forEach(([,, selectionManager]) => {
-
-                    const start = { lineNumber: startLineNumber, column: startColumn };
-                    const end = { lineNumber: endLineNumber, column: endColumn };
-                    selectionManager.setSelectionPositions(curID, start, end);
-
-                });
-
-            }
-
-            // Cursor Pos Change occurred
-            if ('p' in update) {
-
-                const pos: Monaco.Position = update.p;
-                editors.forEach(([, cursorManager]) => cursorManager.setCursorPosition(curID, pos));
-
-            }
-
-        });
+        this.prescence.removeListener('receive', this.onPresenceReceive);
+        this.prescence.on('receive', this.onPresenceReceive);
 
     }
 

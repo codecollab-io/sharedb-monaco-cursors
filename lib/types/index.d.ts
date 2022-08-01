@@ -49,3 +49,9 @@ export type CursorWidgetOptions = {
     tooltipDuration: number;
     onDisposed: () => void;
 }
+
+export type IPresenceReceiveUpdate = {
+    s: Monaco.Selection
+} | {
+    p: Monaco.Position
+}

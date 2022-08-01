@@ -22,6 +22,7 @@ declare class ShareDBMonacoCursors implements Monaco.IDisposable {
     constructor(opts: ShareDBMonacoCursorsOptions);
     private onDidChangeCursorPosition;
     private onDidChangeCursorSelection;
+    private onPresenceReceive;
     private attachEventListeners;
     /**
      * Toggles the View-Only state of the cursors.
