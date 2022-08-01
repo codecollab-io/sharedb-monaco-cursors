@@ -22,6 +22,7 @@ declare class ShareDBMonacoCursors implements Monaco.IDisposable {
     constructor(opts: ShareDBMonacoCursorsOptions);
     private onDidChangeCursorPosition;
     private onDidChangeCursorSelection;
+    private static sleep;
     private onPresenceReceive;
     private attachEventListeners;
     /**

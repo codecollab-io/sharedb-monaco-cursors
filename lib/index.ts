@@ -134,7 +134,13 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
 
     }
 
-    private onPresenceReceive(id: string, update: IPresenceReceiveUpdate) {
+    private static async sleep(seconds: number) {
+
+        await new Promise((resolve) => setTimeout(resolve, seconds * 1000));
+
+    }
+
+    private async onPresenceReceive(id: string, update: IPresenceReceiveUpdate) {
 
         const { editors, colors } = this;
 
@@ -155,6 +161,8 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
             return;
 
         }
+
+        await ShareDBMonacoCursors.sleep(0.2);
 
         // New cursor
         if (!this.cursors.has(uid)) {
