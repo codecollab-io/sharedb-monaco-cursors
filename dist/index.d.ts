@@ -17,6 +17,7 @@ declare class ShareDBMonacoCursors implements Monaco.IDisposable {
     private viewOnly;
     private name;
     private cursors;
+    private fileID;
     private colors;
     constructor(opts: ShareDBMonacoCursorsOptions);
     private onDidChangeCursorPosition;

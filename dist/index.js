@@ -24,10 +24,11 @@ var ShareDBMonacoCursors = /** @class */ (function () {
         this.colors = ['BurlyWood', 'lightseagreen', 'Violet', 'Red', 'forestgreen', 'DarkViolet', 'OrangeRed', 'navy', 'darkviolet', 'maroon'];
         var connection = opts.connection, namespace = opts.namespace, id = opts.id, viewOnly = opts.viewOnly, name = opts.name, colors = opts.colors, editors = opts.editors;
         this.viewOnly = viewOnly;
-        this.prescence = connection.getPresence("".concat(namespace, "-").concat(id));
+        this.prescence = connection.getPresence(namespace);
         this.prescence.subscribe();
         this.name = name;
-        this.prescenceId += "-".concat(name);
+        this.prescenceId = "".concat(id, "-").concat(this.prescenceId, "-").concat(name);
+        this.fileID = id;
         if (colors)
             this.colors = colors;
         editors.forEach(function (editor) { return _this.editors.set(editor.getId(), [
@@ -49,11 +50,11 @@ var ShareDBMonacoCursors = /** @class */ (function () {
     }
     ShareDBMonacoCursors.prototype.onDidChangeCursorPosition = function (event) {
         if (!this.viewOnly)
-            this.localPrescence.submit({ p: event.position, name: this.name });
+            this.localPrescence.submit({ p: event.position });
     };
     ShareDBMonacoCursors.prototype.onDidChangeCursorSelection = function (event) {
         if (!this.viewOnly)
-            this.localPrescence.submit({ s: event.selection, name: this.name });
+            this.localPrescence.submit({ s: event.selection });
     };
     ShareDBMonacoCursors.prototype.attachEventListeners = function () {
         var _this = this;
@@ -73,35 +74,36 @@ var ShareDBMonacoCursors = /** @class */ (function () {
         });
         this.prescence.removeAllListeners('receive');
         this.prescence.on('receive', function (id, update) {
+            var _a = id.split('-'), fileID = _a[0], prescenceId = _a[1], name = _a[2];
+            var curID = "".concat(prescenceId, "-").concat(name);
             // Cursor left
-            if (!update) {
+            if (!update || fileID !== _this.fileID) {
                 editors.forEach(function (_a) {
                     var cursorManager = _a[1], selectionManager = _a[2];
-                    cursorManager.removeCursor(id);
-                    selectionManager.removeSelection(id);
+                    cursorManager.removeCursor(curID);
+                    selectionManager.removeSelection(curID);
                 });
-                _this.cursors.delete(id);
+                _this.cursors.delete(curID);
                 return;
             }
-            var name = update.name;
             // New cursor
-            if (!_this.cursors.has(id)) {
+            if (!_this.cursors.has(curID)) {
                 editors.forEach(function (_a) {
                     var cursorManager = _a[1], selectionManager = _a[2];
                     var color = colors[Math.floor(Math.random() * colors.length)];
-                    cursorManager.addCursor(id, color, name);
-                    selectionManager.addSelection(id, color, name);
-                    _this.cursors.set(id, { color: color, name: name });
+                    cursorManager.addCursor(curID, color, name);
+                    selectionManager.addSelection(curID, color, name);
+                    _this.cursors.set(curID, { color: color, name: name });
                 });
             }
             // Selection occurred
             if ('s' in update) {
-                var _a = update.s, startColumn_1 = _a.startColumn, startLineNumber_1 = _a.startLineNumber, endColumn_1 = _a.endColumn, endLineNumber_1 = _a.endLineNumber;
+                var _b = update.s, startColumn_1 = _b.startColumn, startLineNumber_1 = _b.startLineNumber, endColumn_1 = _b.endColumn, endLineNumber_1 = _b.endLineNumber;
                 editors.forEach(function (_a) {
                     var selectionManager = _a[2];
                     var start = { lineNumber: startLineNumber_1, column: startColumn_1 };
                     var end = { lineNumber: endLineNumber_1, column: endColumn_1 };
-                    selectionManager.setSelectionPositions(id, start, end);
+                    selectionManager.setSelectionPositions(curID, start, end);
                 });
             }
             // Cursor Pos Change occurred
@@ -109,7 +111,7 @@ var ShareDBMonacoCursors = /** @class */ (function () {
                 var pos_1 = update.p;
                 editors.forEach(function (_a) {
                     var cursorManager = _a[1];
-                    return cursorManager.setCursorPosition(id, pos_1);
+                    return cursorManager.setCursorPosition(curID, pos_1);
                 });
             }
         });

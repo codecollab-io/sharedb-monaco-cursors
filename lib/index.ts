@@ -79,6 +79,8 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
 
     private cursors: Map<string, Cursor> = new Map();
 
+    private fileID: string;
+
     private colors = ['BurlyWood', 'lightseagreen', 'Violet', 'Red', 'forestgreen', 'DarkViolet', 'OrangeRed', 'navy', 'darkviolet', 'maroon'];
 
     constructor(opts: ShareDBMonacoCursorsOptions) {
@@ -86,10 +88,11 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
         const { connection, namespace, id, viewOnly, name, colors, editors } = opts;
 
         this.viewOnly = viewOnly;
-        this.prescence = connection.getPresence(`${namespace}-${id}`);
+        this.prescence = connection.getPresence(namespace);
         this.prescence.subscribe();
         this.name = name;
-        this.prescenceId += `-${name}`;
+        this.prescenceId = `${id}-${this.prescenceId}-${name}`;
+        this.fileID = id;
         if (colors) this.colors = colors;
 
         editors.forEach((editor) => this.editors.set(editor.getId(), [
@@ -120,13 +123,13 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
 
     private onDidChangeCursorPosition(event: Monaco.editor.ICursorPositionChangedEvent) {
 
-        if (!this.viewOnly) this.localPrescence.submit({ p: event.position, name: this.name });
+        if (!this.viewOnly) this.localPrescence.submit({ p: event.position });
 
     }
 
     private onDidChangeCursorSelection(event: Monaco.editor.ICursorSelectionChangedEvent) {
 
-        if (!this.viewOnly) this.localPrescence.submit({ s: event.selection, name: this.name });
+        if (!this.viewOnly) this.localPrescence.submit({ s: event.selection });
 
     }
 
@@ -150,34 +153,35 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
         this.prescence.removeAllListeners('receive');
         this.prescence.on('receive', (id, update) => {
 
+            const [fileID, prescenceId, name] = id.split('-');
+            const curID = `${prescenceId}-${name}`;
+
             // Cursor left
-            if (!update) {
+            if (!update || fileID !== this.fileID) {
 
                 editors.forEach(([, cursorManager, selectionManager]) => {
 
-                    cursorManager.removeCursor(id);
-                    selectionManager.removeSelection(id);
+                    cursorManager.removeCursor(curID);
+                    selectionManager.removeSelection(curID);
 
                 });
 
-                this.cursors.delete(id);
+                this.cursors.delete(curID);
 
                 return;
 
             }
 
-            const { name } = update;
-
             // New cursor
-            if (!this.cursors.has(id)) {
+            if (!this.cursors.has(curID)) {
 
                 editors.forEach(([, cursorManager, selectionManager]) => {
 
                     const color = colors[Math.floor(Math.random() * colors.length)];
-                    cursorManager.addCursor(id, color, name);
-                    selectionManager.addSelection(id, color, name);
+                    cursorManager.addCursor(curID, color, name);
+                    selectionManager.addSelection(curID, color, name);
 
-                    this.cursors.set(id, { color, name });
+                    this.cursors.set(curID, { color, name });
 
                 });
 
@@ -194,7 +198,7 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
 
                     const start = { lineNumber: startLineNumber, column: startColumn };
                     const end = { lineNumber: endLineNumber, column: endColumn };
-                    selectionManager.setSelectionPositions(id, start, end);
+                    selectionManager.setSelectionPositions(curID, start, end);
 
                 });
 
@@ -204,7 +208,7 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
             if ('p' in update) {
 
                 const pos: Monaco.Position = update.p;
-                editors.forEach(([, cursorManager]) => cursorManager.setCursorPosition(id, pos));
+                editors.forEach(([, cursorManager]) => cursorManager.setCursorPosition(curID, pos));
 
             }
 
