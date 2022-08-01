@@ -22,12 +22,12 @@ var ShareDBMonacoCursors = /** @class */ (function () {
         this.listeners = [];
         this.cursors = new Map();
         this.colors = ['BurlyWood', 'lightseagreen', 'Violet', 'Red', 'forestgreen', 'DarkViolet', 'OrangeRed', 'navy', 'darkviolet', 'maroon'];
-        var connection = opts.connection, namespace = opts.namespace, id = opts.id, viewOnly = opts.viewOnly, name = opts.name, colors = opts.colors, editors = opts.editors;
+        var connection = opts.connection, namespace = opts.namespace, id = opts.id, viewOnly = opts.viewOnly, name = opts.name, colors = opts.colors, editors = opts.editors, uid = opts.uid;
         this.viewOnly = viewOnly;
         this.prescence = connection.getPresence(namespace);
         this.prescence.subscribe();
         this.name = name;
-        this.prescenceId = "".concat(id, "-").concat(this.prescenceId, "-").concat(name);
+        this.prescenceId = "".concat(id, "-").concat(uid || this.prescenceId, "-").concat(name);
         this.fileID = id;
         if (colors)
             this.colors = colors;
@@ -60,26 +60,25 @@ var ShareDBMonacoCursors = /** @class */ (function () {
     ShareDBMonacoCursors.prototype.onPresenceReceive = function (id, update) {
         var _this = this;
         var _a = this, editors = _a.editors, colors = _a.colors;
-        var _b = id.split('-'), fileID = _b[0], prescenceId = _b[1], name = _b[2];
-        var curID = "".concat(prescenceId, "-").concat(name);
+        var _b = id.split('-'), fileID = _b[0], uid = _b[1], name = _b[2];
         // Cursor left
         if (!update || fileID !== this.fileID) {
             editors.forEach(function (_a) {
                 var cursorManager = _a[1], selectionManager = _a[2];
-                cursorManager.removeCursor(curID);
-                selectionManager.removeSelection(curID);
+                cursorManager.removeCursor(uid);
+                selectionManager.removeSelection(uid);
             });
-            this.cursors.delete(curID);
+            this.cursors.delete(uid);
             return;
         }
         // New cursor
-        if (!this.cursors.has(curID)) {
+        if (!this.cursors.has(uid)) {
             editors.forEach(function (_a) {
                 var cursorManager = _a[1], selectionManager = _a[2];
                 var color = colors[Math.floor(Math.random() * colors.length)];
-                cursorManager.addCursor(curID, color, name);
-                selectionManager.addSelection(curID, color, name);
-                _this.cursors.set(curID, { color: color, name: name });
+                cursorManager.addCursor(uid, color, name);
+                selectionManager.addSelection(uid, color, name);
+                _this.cursors.set(uid, { color: color, name: name });
             });
         }
         // Selection occurred
@@ -89,7 +88,7 @@ var ShareDBMonacoCursors = /** @class */ (function () {
                 var selectionManager = _a[2];
                 var start = { lineNumber: startLineNumber_1, column: startColumn_1 };
                 var end = { lineNumber: endLineNumber_1, column: endColumn_1 };
-                selectionManager.setSelectionPositions(curID, start, end);
+                selectionManager.setSelectionPositions(uid, start, end);
             });
         }
         // Cursor Pos Change occurred
@@ -97,7 +96,7 @@ var ShareDBMonacoCursors = /** @class */ (function () {
             var pos_1 = update.p;
             editors.forEach(function (_a) {
                 var cursorManager = _a[1];
-                return cursorManager.setCursorPosition(curID, pos_1);
+                return cursorManager.setCursorPosition(uid, pos_1);
             });
         }
     };

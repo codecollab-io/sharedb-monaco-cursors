@@ -85,13 +85,13 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
 
     constructor(opts: ShareDBMonacoCursorsOptions) {
 
-        const { connection, namespace, id, viewOnly, name, colors, editors } = opts;
+        const { connection, namespace, id, viewOnly, name, colors, editors, uid } = opts;
 
         this.viewOnly = viewOnly;
         this.prescence = connection.getPresence(namespace);
         this.prescence.subscribe();
         this.name = name;
-        this.prescenceId = `${id}-${this.prescenceId}-${name}`;
+        this.prescenceId = `${id}-${uid || this.prescenceId}-${name}`;
         this.fileID = id;
         if (colors) this.colors = colors;
 
@@ -138,35 +138,34 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
 
         const { editors, colors } = this;
 
-        const [fileID, prescenceId, name] = id.split('-');
-        const curID = `${prescenceId}-${name}`;
+        const [fileID, uid, name] = id.split('-');
 
         // Cursor left
         if (!update || fileID !== this.fileID) {
 
             editors.forEach(([, cursorManager, selectionManager]) => {
 
-                cursorManager.removeCursor(curID);
-                selectionManager.removeSelection(curID);
+                cursorManager.removeCursor(uid);
+                selectionManager.removeSelection(uid);
 
             });
 
-            this.cursors.delete(curID);
+            this.cursors.delete(uid);
 
             return;
 
         }
 
         // New cursor
-        if (!this.cursors.has(curID)) {
+        if (!this.cursors.has(uid)) {
 
             editors.forEach(([, cursorManager, selectionManager]) => {
 
                 const color = colors[Math.floor(Math.random() * colors.length)];
-                cursorManager.addCursor(curID, color, name);
-                selectionManager.addSelection(curID, color, name);
+                cursorManager.addCursor(uid, color, name);
+                selectionManager.addSelection(uid, color, name);
 
-                this.cursors.set(curID, { color, name });
+                this.cursors.set(uid, { color, name });
 
             });
 
@@ -183,7 +182,7 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
 
                 const start = { lineNumber: startLineNumber, column: startColumn };
                 const end = { lineNumber: endLineNumber, column: endColumn };
-                selectionManager.setSelectionPositions(curID, start, end);
+                selectionManager.setSelectionPositions(uid, start, end);
 
             });
 
@@ -193,7 +192,7 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
         if ('p' in update) {
 
             const pos: Monaco.Position = update.p;
-            editors.forEach(([, cursorManager]) => cursorManager.setCursorPosition(curID, pos));
+            editors.forEach(([, cursorManager]) => cursorManager.setCursorPosition(uid, pos));
 
         }
 

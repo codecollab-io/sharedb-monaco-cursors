@@ -19,6 +19,7 @@ export type ShareDBMonacoCursorsOptions = {
     name: string;
     colors?: string[];
     editors: Monaco.editor.ICodeEditor[];
+    uid?: string;
 }
 
 export type ISelectionManagerOptions = {
