@@ -77,6 +77,7 @@ var ShareDBMonacoCursors = /** @class */ (function () {
             var _a = id.split('-'), fileID = _a[0], prescenceId = _a[1], name = _a[2];
             var curID = "".concat(prescenceId, "-").concat(name);
             // Cursor left
+            console.log(fileID, _this.fileID);
             if (!update || fileID !== _this.fileID) {
                 editors.forEach(function (_a) {
                     var cursorManager = _a[1], selectionManager = _a[2];

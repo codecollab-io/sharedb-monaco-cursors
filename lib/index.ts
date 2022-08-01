@@ -157,6 +157,7 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
             const curID = `${prescenceId}-${name}`;
 
             // Cursor left
+            console.log(fileID, this.fileID);
             if (!update || fileID !== this.fileID) {
 
                 editors.forEach(([, cursorManager, selectionManager]) => {
