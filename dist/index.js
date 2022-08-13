@@ -58,7 +58,7 @@ var ShareDBMonacoCursors = /** @class */ (function () {
         this.listeners = [];
         this.cursors = new Map();
         this.colors = ['BurlyWood', 'lightseagreen', 'Violet', 'Red', 'forestgreen', 'DarkViolet', 'OrangeRed', 'navy', 'darkviolet', 'maroon'];
-        var connection = opts.connection, namespace = opts.namespace, id = opts.id, viewOnly = opts.viewOnly, name = opts.name, colors = opts.colors, editors = opts.editors, uid = opts.uid;
+        var connection = opts.connection, namespace = opts.namespace, id = opts.id, _a = opts.viewOnly, viewOnly = _a === void 0 ? false : _a, name = opts.name, colors = opts.colors, editors = opts.editors, uid = opts.uid;
         this.viewOnly = viewOnly;
         this.prescence = connection.getPresence(namespace);
         this.prescence.subscribe();

@@ -85,7 +85,7 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
 
     constructor(opts: ShareDBMonacoCursorsOptions) {
 
-        const { connection, namespace, id, viewOnly, name, colors, editors, uid } = opts;
+        const { connection, namespace, id, viewOnly = false, name, colors, editors, uid } = opts;
 
         this.viewOnly = viewOnly;
         this.prescence = connection.getPresence(namespace);

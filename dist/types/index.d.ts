@@ -15,11 +15,11 @@ export type ShareDBMonacoCursorsOptions = {
     connection: Connection;
     namespace: string;
     id: string;
-    viewOnly: boolean;
     name: string;
-    colors?: string[];
     editors: Monaco.editor.ICodeEditor[];
     uid?: string;
+    viewOnly?: boolean;
+    colors?: string[];
 }
 
 export type ISelectionManagerOptions = {
