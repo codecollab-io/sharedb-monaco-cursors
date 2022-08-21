@@ -80,10 +80,11 @@ var ShareDBMonacoCursors = /** @class */ (function () {
             style.innerHTML = styles;
             document.getElementsByTagName('head')[0].appendChild(style);
         }
-        this.attachEventListeners();
         this.onDidChangeCursorPosition = this.onDidChangeCursorPosition.bind(this);
         this.onDidChangeCursorSelection = this.onDidChangeCursorSelection.bind(this);
+        this.boundOnPresenceReceive = function (pid, update) { return _this.onPresenceReceive(pid, update); };
         this.onPresenceReceive = this.onPresenceReceive.bind(this);
+        this.attachEventListeners();
     }
     ShareDBMonacoCursors.prototype.onDidChangeCursorPosition = function (event) {
         if (!this.viewOnly)
@@ -175,8 +176,8 @@ var ShareDBMonacoCursors = /** @class */ (function () {
             var editor = _a[0];
             return listeners.push(editor.onDidChangeCursorSelection(onSel));
         });
-        this.prescence.removeListener('receive', this.onPresenceReceive);
-        this.prescence.on('receive', this.onPresenceReceive);
+        this.prescence.removeListener('receive', this.boundOnPresenceReceive);
+        this.prescence.on('receive', this.boundOnPresenceReceive);
     };
     /**
      * Toggles the View-Only state of the cursors.
@@ -217,8 +218,13 @@ var ShareDBMonacoCursors = /** @class */ (function () {
         cursorManager.dispose();
         selectionManager.dispose();
         this.editors.delete(id);
-        if (this.editors.size === 0)
+        if (this.editors.size === 0) {
+            this.listeners.forEach(function (listener) { return listener.dispose(); });
+            this.listeners = [];
+            this.prescence.removeListener('receive', this.boundOnPresenceReceive);
             this.prescence.unsubscribe();
+            return;
+        }
         this.attachEventListeners();
     };
     /**
