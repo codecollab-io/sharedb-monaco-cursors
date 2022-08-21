@@ -83,6 +83,8 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
 
     private colors = ['BurlyWood', 'lightseagreen', 'Violet', 'Red', 'forestgreen', 'DarkViolet', 'OrangeRed', 'navy', 'darkviolet', 'maroon'];
 
+    private boundOnPresenceReceive: (id: string, update: IPresenceReceiveUpdate) => void;
+
     constructor(opts: ShareDBMonacoCursorsOptions) {
 
         const { connection, namespace, id, viewOnly = false, name, colors, editors, uid } = opts;
@@ -114,11 +116,12 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
 
         }
 
-        this.attachEventListeners();
-
         this.onDidChangeCursorPosition = this.onDidChangeCursorPosition.bind(this);
         this.onDidChangeCursorSelection = this.onDidChangeCursorSelection.bind(this);
+        this.boundOnPresenceReceive = (pid, update) => this.onPresenceReceive(pid, update);
         this.onPresenceReceive = this.onPresenceReceive.bind(this);
+
+        this.attachEventListeners();
 
     }
 
@@ -223,8 +226,8 @@ class ShareDBMonacoCursors implements Monaco.IDisposable {
         editors.forEach(([editor]) => listeners.push(editor.onDidChangeCursorPosition(onPos)));
         editors.forEach(([editor]) => listeners.push(editor.onDidChangeCursorSelection(onSel)));
 
-        this.prescence.removeListener('receive', this.onPresenceReceive);
-        this.prescence.on('receive', this.onPresenceReceive);
+        this.prescence.on('receive', this.boundOnPresenceReceive);
+        this.prescence.on('receive', this.boundOnPresenceReceive);
 
     }
 
