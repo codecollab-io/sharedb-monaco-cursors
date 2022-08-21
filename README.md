@@ -1,7 +1,7 @@
 # sharedb-monaco-cursors
 
-[![](https://img.shields.io/npm/v/sharedb-monaco-cursors)](https://github.com/codecollab-io/sharedb-monaco-cursors/blob/master/LICENSE)
-[![](https://img.shields.io/github/license/codecollab-io/sharedb-monaco-cursors)](https://github.com/codecollab-io/sharedb-monaco-cursors/blob/master/LICENSE)
+[![](https://img.shields.io/npm/v/sharedb-monaco-cursors)](https://github.com/codecollab-io/sharedb-monaco-cursors/blob/main/LICENSE)
+[![](https://img.shields.io/github/license/codecollab-io/sharedb-monaco-cursors)](https://github.com/codecollab-io/sharedb-monaco-cursors/blob/main/LICENSE)
 
 Collaborative Cursor and Selection support for [sharedb-monaco](https://github.com/codecollab-io/sharedb-monaco).
 
